@@ -1,0 +1,5 @@
+xian_gas:
+  services:
+    reload:
+      name: Reload
+      description: Reload all 西安天然气 entities.

@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Xi'an Gas",
+        "description": "Set up Xi'an Gas integration",
+        "data": {
+          "user_id": "User ID",
+          "card_id": "Card ID",
+          "xiuzheng": "Correction Value",
+          "token_s": "Token S"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_auth": "Invalid authentication",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "Device is already configured"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Xi'an Gas Options",
+        "description": "Update Xi'an Gas configuration",
+        "data": {
+          "user_id": "User ID",
+          "card_id": "Card ID",
+          "xiuzheng": "Correction Value",
+          "token_s": "Token S"
+        }
+      }
+    }
+  }
+}
