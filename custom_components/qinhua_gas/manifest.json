@@ -1,6 +1,6 @@
 {
-  "domain": "xian_gas",
-  "name": "西安天然气",
+  "domain": "qinhua_gas",
+  "name": "秦华燃气",
   "documentation": "https://github.com/xiaoshi930i/xian_gas",
   "dependencies": [],
   "codeowners": ["xiaoshi930"],
