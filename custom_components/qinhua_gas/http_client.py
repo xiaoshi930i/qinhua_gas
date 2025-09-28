@@ -16,9 +16,10 @@ class XianGasClient:
         """Initialize the client."""
         self.user_id = user_id
         self.card_id = card_id
-        self.xiuzheng = float(xiuzheng)
+        self.xiuzheng = float(xiuzheng) if xiuzheng else 0
         self.token_s = token_s
         self.session = None
+        _LOGGER.info("初始化客户端，修正值: %s", self.xiuzheng)
 
     async def async_get_data(self):
         """Get data from the API."""
@@ -177,8 +178,10 @@ class XianGasClient:
             s2 = abs((today - first_date).days)
             
             # 计算剩余金额和可用天数
-            b = float(data[0]["cost"]) + self.xiuzheng
-            estimated_balance = b - (c * s2) + 10 + self.xiuzheng  # 加上10和调整参数
+            b = float(data[0]["cost"])
+            _LOGGER.info("原始余额: %s, 修正值: %s", b, self.xiuzheng)
+            estimated_balance = b - (c * s2) + 10 + self.xiuzheng  # 加上10元作为基础余额和修正值
+            _LOGGER.info("计算后余额: %s", estimated_balance)
             estimated_usage_days = estimated_balance / c if c > 0 else 0
             
             return {
