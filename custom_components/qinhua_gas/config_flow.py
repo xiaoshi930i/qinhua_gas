@@ -88,28 +88,44 @@ class XianGasOptionsFlowHandler(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
         """Manage the options."""
         if user_input is not None:
+            # 确保修正值是浮点数
+            if CONF_XIUZHENG in user_input:
+                try:
+                    user_input[CONF_XIUZHENG] = float(user_input[CONF_XIUZHENG])
+                except (ValueError, TypeError):
+                    user_input[CONF_XIUZHENG] = DEFAULT_XIUZHENG
+            
+            _LOGGER.info("更新配置选项，修正值: %s", user_input.get(CONF_XIUZHENG))
             return self.async_create_entry(title="", data=user_input)
 
+        # 优先从 options 中获取值，如果没有则从 data 中获取
+        user_id = self.config_entry.options.get(
+            CONF_USER_ID, 
+            self.config_entry.data.get(CONF_USER_ID, DEFAULT_USER_ID)
+        )
+        card_id = self.config_entry.options.get(
+            CONF_CARD_ID, 
+            self.config_entry.data.get(CONF_CARD_ID, DEFAULT_CARD_ID)
+        )
+        xiuzheng = self.config_entry.options.get(
+            CONF_XIUZHENG, 
+            self.config_entry.data.get(CONF_XIUZHENG, DEFAULT_XIUZHENG)
+        )
+        token_s = self.config_entry.options.get(
+            CONF_TOKEN_S, 
+            self.config_entry.data.get(CONF_TOKEN_S, DEFAULT_TOKEN_S)
+        )
+        
+        _LOGGER.info("显示配置表单，当前修正值: %s", xiuzheng)
+        
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_USER_ID,
-                        default=self.config_entry.data.get(CONF_USER_ID),
-                    ): str,
-                    vol.Required(
-                        CONF_CARD_ID,
-                        default=self.config_entry.data.get(CONF_CARD_ID),
-                    ): str,
-                    vol.Required(
-                        CONF_XIUZHENG,
-                        default=self.config_entry.data.get(CONF_XIUZHENG, DEFAULT_XIUZHENG),
-                    ): vol.Coerce(float),
-                    vol.Required(
-                        CONF_TOKEN_S,
-                        default=self.config_entry.data.get(CONF_TOKEN_S, DEFAULT_TOKEN_S),
-                    ): str,
+                    vol.Required(CONF_USER_ID, default=user_id): str,
+                    vol.Required(CONF_CARD_ID, default=card_id): str,
+                    vol.Required(CONF_XIUZHENG, default=xiuzheng): vol.Coerce(float),
+                    vol.Required(CONF_TOKEN_S, default=token_s): str,
                 }
             ),
         )
