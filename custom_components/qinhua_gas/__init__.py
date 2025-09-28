@@ -52,11 +52,19 @@ async def async_setup(hass: HomeAssistant, config: dict) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up 西安天然气 from a config entry."""
+    # 优先从选项中获取配置，如果没有则从数据中获取
+    user_id = entry.options.get(CONF_USER_ID, entry.data.get(CONF_USER_ID, DEFAULT_USER_ID))
+    card_id = entry.options.get(CONF_CARD_ID, entry.data.get(CONF_CARD_ID, DEFAULT_CARD_ID))
+    xiuzheng = entry.options.get(CONF_XIUZHENG, entry.data.get(CONF_XIUZHENG, DEFAULT_XIUZHENG))
+    token_s = entry.options.get(CONF_TOKEN_S, entry.data.get(CONF_TOKEN_S, DEFAULT_TOKEN_S))
+    
+    _LOGGER.info("设置修正值: %s", xiuzheng)
+    
     client = XianGasClient(
-        entry.data.get(CONF_USER_ID, DEFAULT_USER_ID),
-        entry.data.get(CONF_CARD_ID, DEFAULT_CARD_ID),
-        entry.data.get(CONF_XIUZHENG, DEFAULT_XIUZHENG),
-        entry.data.get(CONF_TOKEN_S, DEFAULT_TOKEN_S),
+        user_id,
+        card_id,
+        xiuzheng,
+        token_s,
     )
 
     coordinator = DataUpdateCoordinator(
@@ -100,4 +108,5 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload the config entry when it changed."""
+    _LOGGER.info("重新加载配置项，修正值: %s", entry.options.get(CONF_XIUZHENG))
     await hass.config_entries.async_reload(entry.entry_id)
